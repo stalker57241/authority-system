@@ -1,0 +1,51 @@
+#menubar {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.space-between {
+    justify-content: space-between;
+}
+.space-around {
+    justify-content: space-around;
+}
+.space-evenly {
+    justify-content: space-evenly;
+}
+
+.hcontainer-reversed {
+    flex-direction: row-reverse;
+    display: flex;
+}
+
+.hcontainer {
+    flex-direction: row;
+    display: flex;
+}
+.vcontainer-reversed {
+    flex-direction: column-reverse;
+    display: flex;
+}
+
+.vcontainer {
+    flex-direction: column;
+    display: flex;
+}
+
+.wrapped {
+    flex-wrap: wrap;
+}
+
+.centered {
+    /* margin: auto; */
+    margin-left: auto;
+    margin-right: auto;
+    vertical-align: middle;
+}
+
+.fill {
+    width: 100%;
+    margin: 0 auto;
+}

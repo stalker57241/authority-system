@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='containers.css')}}"/>
+    <title>{% block title%} {% endblock%}</title>
+    {% endblock %}
+</head>
+<body>
+    <div class="hcontainer space-between" id="menubar">
+        {% block menubar %}
+        <div></div>
+        <div class="hcontainer">
+            <a href="{{ url_for('login') }}" id="login">Login</a>
+            <a href="{{ url_for('register') }}" id="register">Register</a>
+        </div>
+        {% endblock %}
+    </div>
+    <div id="content">{% block content %}{% endblock %}</div>
+    <div id="footer">
+        {% block footer %}
+        &copy; Copyright 2026 by <a href="http://github.com/stalker57241/">Stalker320</a>.
+        {% endblock %}
+    </div>
+</body>
+</html>
