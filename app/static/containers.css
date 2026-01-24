@@ -44,6 +44,11 @@
     margin-right: auto;
     vertical-align: middle;
 }
+.vcontainer-reversed.list > ::before,
+.vcontainer.list > ::before {
+    content: "- ";
+    width: 20px;
+}
 
 .fill {
     width: 100%;

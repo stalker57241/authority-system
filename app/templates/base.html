@@ -11,10 +11,15 @@
 <body>
     <div class="hcontainer space-between" id="menubar">
         {% block menubar %}
-        <div></div>
+        <div><a href="/">Homepage</a></div>
         <div class="hcontainer">
-            <a href="{{ url_for('login') }}" id="login">Login</a>
-            <a href="{{ url_for('register') }}" id="register">Register</a>
+            {% if username is not defined %}
+            <a href="/auth/login" id="login">Log in</a>
+            <a href="/auth/register" id="register">Register</a>
+            {% else %}
+            <a href="/users/{{ username }}" id="logout">{{ username }}</a>
+            <a href="/auth/logout" id="logout">Log out</a>
+            {% endif %}
         </div>
         {% endblock %}
     </div>

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}
+    User list
+{% endblock %}
+{% block content %}
+    <div class="vcontainer list">
+        {% for user in users %}
+            <a href="{{'/users/%s' % user.name}}">{{ user.name }}</a>
+        {% endfor %}
+    </div>
+{% endblock %}

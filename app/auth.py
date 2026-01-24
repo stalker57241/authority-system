@@ -1,6 +1,7 @@
 import flask
+from flask import session
 import sqlite3
-from app.config import DATABASE, app
+from app.config import DATABASE, app, TOKEN_TITLE
 
 
 class Validator:
@@ -55,3 +56,74 @@ def close_connection(_exception):
     db: sqlite3.Connection | None = getattr(flask.g, "_database", None)
     if db is None: return
     db.close()
+
+def get_user_id() -> int | None:
+    token = session[TOKEN_TITLE]
+    query_result = query_db("SELECT id FROM UserTokens WHERE token=?", (token,), True)
+    print(query_result)
+    response: dict = query_result["response"]
+    if response == None: return None
+    idx = response["id"]
+    return idx
+
+def get_permissions(userid: int) -> list[int]:
+    query_result = query_db("SELECT permid FROM GrantedPermissions WHERE userid=?", (userid,))
+    responses = query_result["response"]
+    result: list[int] = []
+    for response in responses:
+        result.append(response["permid"])
+    
+    return result
+
+def has_permission(userid: int, permid: int | None) -> bool:
+    if permid == None: return False
+    query_result = query_db("SELECT permid FROM GrantedPermissions WHERE userid=? AND permid=?", (userid, permid))
+    response = query_result["response"]
+    return len(response) > 0
+
+def get_parent_permid(permid: int | None) -> int | None:
+    query_result = query_db("SELECT parentpermid FROM Permissions WHERE id=?", (permid,), True)
+    response: dict = query_result["response"]
+    pid = response["parentpermid"]
+    return pid
+
+def is_base_permission(permid: int, checkable_permid: int) -> bool:
+    if permid == checkable_permid: return True
+    curpermid = permid
+    while curpermid != checkable_permid:
+        curpermid = get_parent_permid(curpermid)
+        if curpermid == None:
+            return False
+    else:
+        return True
+
+def check_permission(userid: int, permid: int) -> bool:
+    """Deep check of permission"""
+    pid: int | None = permid
+    while not has_permission(userid, pid):
+        pid = get_parent_permid(pid)
+        if pid == None:
+            return False
+    
+    else:
+        return True
+
+def count_permission_depth(permid: int) -> int:
+    counter = 0
+    curpermid = permid
+    while curpermid != None:
+        curpermid = get_parent_permid(curpermid)
+        counter += 1
+    return counter
+
+def grant_permission(userid: int, permid: int):
+    query_db("""
+        INSERT OR IGNORE INTO
+            GrantedPermissions(userid, permid)
+        VALUES (?, ?)""", (userid, permid))
+
+def revoke_permission(userid: int, permid: int):
+    query_db("""
+        DELETE FROM
+            GrantedPermissions
+        WHERE userid=? AND permid=?""", (userid, permid))

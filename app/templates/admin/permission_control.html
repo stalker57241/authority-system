@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %} Permission control {% endblock %}
+{% block content %}
+    <div class="vcontainer">
+        {% for permission in permissions %}
+        <div class="hcontainer space-between">
+            <span>
+                {{ "+" * permission.depth }}
+                {{ permission.permname }}
+                {% if permission.parentpermid != None %}
+                {% endif %}
+            </span>
+            {% if permission.parentpermid != None %}
+            <form action="{{'/admin/permissions/%s'% permission.id }}" method="post">
+                <input type="text" name="username">
+                <input type="submit" value="Grant" formaction="{{'/admin/permissions/%s/grant'% permission.id }}">
+                <input type="submit" value="Revoke" formaction="{{'/admin/permissions/%s/revoke'% permission.id }}">
+            </form>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}

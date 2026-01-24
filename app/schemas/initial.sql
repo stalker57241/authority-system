@@ -9,7 +9,8 @@ CREATE TABLE IF NOT EXISTS Users (
 CREATE TABLE IF NOT EXISTS UserTokens (
     id INTEGER NOT NULL,
     token TEXT NOT NULL,
-    expired TEXT NOT NULL
+    expired TEXT NOT NULL,
+    PRIMARY KEY(id ASC, token)
 );
 
 CREATE TABLE IF NOT EXISTS Permissions (
@@ -27,15 +28,23 @@ INSERT OR IGNORE INTO Permissions (
         (2, "GUEST", 1),
             (3, "REGISTER", 2),
             (4, "LOGIN", 2),
-    (5, "ACCOUNT", 1),
-        (6, "DELETE", 5);
-        (7, "EDIT", 6),
-        (8, "VIEW", 7),
-
+        (5, "ACCOUNT", 1),
+            (6, "DELETE", 5),
+                (7, "EDIT", 6),
+                    (8, "VIEW", 7),
+        (9, "REPOSITORIES", 1),
+            (10, "AUTHORITY_SYSTEM", 9),
+                (11, "DELETE", 10),
+                    (12, "EDIT", 11),
+                        (13, "VIEW", 12),
+            (14, "AUTHORITY_SYSTEM_TESTS", 9),
+                (15, "DELETE", 14),
+                    (16, "EDIT", 15),
+                        (17, "VIEW", 16);
 CREATE TABLE IF NOT EXISTS GrantedPermissions (
     userid INTEGER NOT NULL,
     permid INTEGER NOT NULL,
-    PRIMARY KEY(userid ASC, permid),
+    PRIMARY KEY(userid, permid ASC),
     FOREIGN KEY(userid) REFERENCES Users(id)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
