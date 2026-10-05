@@ -1,1 +1,6 @@
+.vscode/
+.vs/
+**/__pycache__/
+*.db
+flask_session/
 venv/
